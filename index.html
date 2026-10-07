@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>45인승 하교셔틀버스[8호차]</title>
+<style>
+*{box-sizing:border-box}
+:root{--bg:#f5f7fb;--card:#fff;--line:#d7dde7;--text:#172033;--muted:#64748b;--blue:#2563eb;--green:#16a34a;--red:#dc2626;--seat:#eef2f7}
+body{margin:0;font-family:Arial,'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text)}
+header{background:#fff;padding:13px 10px 10px;position:sticky;top:0;z-index:10;border-bottom:1px solid #e5e7eb}
+h1{font-size:19px;margin:0 0 9px}.top{display:flex;gap:6px;flex-wrap:wrap}.top input{padding:9px;border:1px solid #d1d5db;border-radius:8px;font-size:14px;flex:1;min-width:145px}
+.btn{border:0;border-radius:9px;padding:9px 11px;font-weight:700;background:#334155;color:#fff;cursor:pointer}.blue{background:var(--blue)}.green{background:var(--green)}.light{background:#eef2f7;color:#334155}
+.wrap{max-width:720px;margin:0 auto;padding:9px}.weekday,.tripbar{display:flex;gap:5px;overflow:auto;margin-bottom:7px}.day,.trip{white-space:nowrap}.day.active,.trip.active{background:#111827;color:#fff}.tripbar{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:6px}.trip{flex:1;font-size:14px}.tripnote{flex:1;display:flex;align-items:center;padding:0 7px;color:#64748b;font-size:12px;font-weight:700}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:7px}.card{background:#fff;border-radius:11px;padding:8px;text-align:center;border:1px solid #e5e7eb}.card b{display:block;font-size:20px;margin-top:2px}
+.stops{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:9px}.stopcard{border:2px solid transparent;border-radius:9px;padding:7px 4px;text-align:center;min-width:0}.snum{font-size:10px;color:#475569}.sname{font-weight:900;font-size:12px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stopcard b{display:block;font-size:16px;margin-top:2px}
+.legend{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:8px 10px;margin-bottom:8px;font-size:12px}.dot{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-2px;margin-right:4px;border:1px solid #cbd5e1}.dot.boarded{background:#fff;border:3px solid #16a34a}.dot.none{background:#eef2f7}
+.bus{background:#fff;border:2px solid #94a3b8;border-radius:28px 28px 18px 18px;padding:14px 12px 18px;box-shadow:0 2px 10px rgba(15,23,42,.06)}
+.bushead{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #cbd5e1;padding:0 4px 10px;margin-bottom:10px;font-size:12px;color:#64748b}.driver{background:#e2e8f0;border-radius:8px;padding:7px 10px;font-weight:800;color:#334155}.door{border:2px solid #94a3b8;border-radius:4px;padding:5px 8px}
+.back45{display:grid;grid-template-columns:1fr 72px 1fr;align-items:center;margin-bottom:7px}.seat45{grid-column:2}
+.seatrow{display:grid;grid-template-columns:minmax(62px,1fr) minmax(62px,1fr) 38px minmax(62px,1fr) minmax(62px,1fr);gap:6px;align-items:stretch;margin:6px 0}.aisle{display:flex;align-items:center;justify-content:center;font-size:9px;color:#94a3b8;writing-mode:vertical-rl;letter-spacing:1px}
+.seatunit{display:flex;flex-direction:column;gap:4px;min-width:0}.seat{width:100%;border:2px solid #cbd5e1;background:var(--seat);border-radius:10px;min-height:58px;padding:5px 4px;text-align:center;cursor:pointer;display:flex;flex-direction:column;justify-content:center;transition:.12s;position:relative}.seat:hover{transform:translateY(-1px)}.seat.on{border:3px solid #16a34a;box-shadow:0 0 0 2px rgba(22,163,74,.13)}.seat.hasname{font-weight:700}.boardquick{width:100%;border:0;border-radius:8px;padding:9px 2px;font-size:12px;font-weight:900;cursor:pointer;background:#fee2e2;color:#b91c1c}.boardquick.on{background:#dcfce7;color:#15803d}
+.seatnum{font-weight:950;font-size:17px;line-height:1}.seatname{font-size:14px;font-weight:850;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.seatstop{font-size:9px;color:#475569;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.check{position:absolute;right:5px;top:3px;font-size:14px;color:#15803d;font-weight:950}
+.hint{font-size:12px;color:#64748b;margin:8px 2px}.actions{display:flex;gap:6px;margin:9px 0}.actions button{flex:1}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:30;align-items:flex-end}.sheet{background:#fff;width:100%;max-height:92vh;border-radius:18px 18px 0 0;padding:15px;overflow:auto}.sheet h2{margin:0 0 10px;font-size:18px}.field{margin:9px 0}.field label{display:block;font-size:12px;font-weight:800;margin-bottom:5px;color:#475569}.field input,.field select{width:100%;padding:11px;border:1px solid #d1d5db;border-radius:9px;font-size:15px;background:#fff;color:#000;-webkit-text-fill-color:#000}.field input::placeholder{color:#6b7280;-webkit-text-fill-color:#6b7280}.field select{font-weight:800;transition:.15s}.modalActions{display:flex;gap:7px;margin-top:12px}.modalActions button{flex:1}
+.settingday{border:1px solid #e5e7eb;border-radius:10px;padding:9px;margin-bottom:9px}.settingday h3{margin:0 0 7px;font-size:15px}.settingtrip{margin-top:7px;padding-top:7px;border-top:1px dashed #e5e7eb}.settingtrip:first-of-type{border-top:0;padding-top:0}.settingtrip b{display:block;font-size:12px;margin-bottom:5px;color:#475569}.stopinputs{display:grid;grid-template-columns:repeat(2,1fr);gap:5px}.stopinputs input{width:100%;padding:8px;border:1px solid #d1d5db;border-radius:7px;color:#000 !important;-webkit-text-fill-color:#000;opacity:1}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:10px 14px;border-radius:9px;display:none;z-index:50;white-space:nowrap}
+@media(max-width:500px){.stops{grid-template-columns:repeat(4,minmax(58px,1fr))}.seatrow{grid-template-columns:minmax(54px,1fr) minmax(54px,1fr) 25px minmax(54px,1fr) minmax(54px,1fr);gap:4px}.seat{min-height:56px}.seatname{font-size:13px}.seatstop{font-size:8px}.aisle{font-size:8px}.back45{grid-template-columns:1fr 62px 1fr}}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#111827">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="8호차 셔틀">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+<header><h1>🚌 45인승 하교셔틀버스[8호차]</h1><div class="top"><button class="btn light" onclick="addToHomeScreen()">🏠 홈 화면 추가</button><input id="date" type="date"><button class="btn light" onclick="today()">오늘</button><button class="btn" onclick="openSettings()">⚙️ 정류소 관리</button></div></header>
+<div class="wrap">
+  <div class="weekday" id="weekday"></div><div id="dayLabel" class="hint"></div>
+  <div class="tripbar" id="tripbar"></div>
+  <div class="summary"><div class="card">전체<b>45명</b></div><div class="card">🟢 탑승<b id="onCount">0명</b></div><div class="card">🔴 미탑승<b id="offCount">45명</b></div></div>
+  <div class="stops" id="stopGrid"></div>
+  <div class="legend"><span><i class="dot boarded"></i>초록 테두리 = 탑승 완료</span><span><i class="dot none"></i>정류소 미지정</span><span>같은 정류소는 좌석도 같은 색으로 표시됩니다.</span></div>
+  <div class="bus">
+    <div class="bushead"><span class="driver">운전석</span><b>앞 FRONT</b><span class="door">출입문</span></div>
+    <div id="seatMap"></div>
+  </div>
+  <div class="actions"><button class="btn blue" onclick="saveCurrent()">💾 저장</button><button class="btn light" onclick="resetBoarding()">현재 차수 탑승 초기화</button></div>
+  <div class="actions"><button class="btn" style="background:#dc2626" onclick="clearCurrentTripNames()">🧹 1~45번 이름 전체 지우기</button></div>
+  <div class="actions"><button class="btn" style="background:#7f1d1d" onclick="resetDayRoster()">🗑️ 현재 요일 명단 지우기</button></div>
+  <div class="hint">※ 「1~45번 이름 전체 지우기」는 현재 선택한 요일·차수의 학생 이름만 한꺼번에 지우며, 정류소와 탑승 상태는 그대로 유지합니다. 「현재 요일 명단 지우기」는 그 요일의 이름과 정류소 배정을 모두 비웁니다.</div>
+</div>
+
+<div class="modal" id="studentModal"><div class="sheet">
+  <h2 id="studentTitle">좌석 정보</h2>
+  <div class="field"><label>학생 이름</label><input id="studentName" type="text" placeholder="" autocomplete="off" spellcheck="false" onfocus="this.select()" onchange="saveNameOnly()"></div>
+  <div class="field"><label>정류소</label><select id="studentStop" onchange="paintStudentStop()"></select></div>
+  <div class="field"><label>탑승 상태</label><button id="boardBtn" class="btn" style="width:100%" onclick="toggleEditingBoard()"></button></div>
+  <div class="modalActions"><button class="btn blue" onclick="saveStudent()">저장</button><button class="btn light" onclick="closeStudent()">취소</button></div>
+</div></div>
+
+<div class="modal" id="settingsModal"><div class="sheet"><h2>⚙️ 요일·차수별 정류소 설정</h2><div class="hint">월·화·목·금은 1차/2차 5개 정류소, 수요일은 1차 3개 정류소입니다.</div><div id="settingsDays"></div><div class="modalActions"><button class="btn blue" onclick="saveSettings()">저장</button><button class="btn light" onclick="closeSettings()">취소</button></div></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DAY=['일요일','월요일','화요일','수요일','목요일','금요일','토요일'];
+const DEFAULT=['다이소','역삼중','버거킹','은마','개포우성'];
+const STOP_COLORS=[
+  {bg:'#dbeafe',border:'#60a5fa'},
+  {bg:'#fce7f3',border:'#f472b6'},
+  {bg:'#dcfce7',border:'#4ade80'},
+  {bg:'#fef3c7',border:'#fbbf24'},
+  {bg:'#ede9fe',border:'#a78bfa'},
+  {bg:'#ffedd5',border:'#fb923c'},
+  {bg:'#cffafe',border:'#22d3ee'}
+];
+const KEY='shuttle45_trip_color_v2';
+const OLDKEY='shuttle45_week7_v1';
+function blank45(){return Array(45).fill('')}
+function tripsForDay(d){return d===3?[1]:[1,2]}
+const WED_STOPS=['역삼중','은마','개포우성'];
+function stopDefaults(d){return d===3?[...WED_STOPS]:[...DEFAULT]}
+function freshData(){let o={names:{},stops:{},assign:{},records:{}};for(let d=1;d<=5;d++){o.names[d]={};o.stops[d]={};o.assign[d]={};for(const t of tripsForDay(d)){o.names[d][t]=blank45();o.stops[d][t]=stopDefaults(d);o.assign[d][t]=blank45()}}return o}
+function loadData(){
+  let saved=null;try{saved=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
+  if(saved)return normalize(saved);
+  // 새 파일에서는 예전 명단을 자동으로 불러오지 않습니다.
+  // 정류소 설정만 구버전에서 가져오고, 학생 이름/좌석 배정은 요일별로 새로 저장합니다.
+  let old=null;try{old=JSON.parse(localStorage.getItem(OLDKEY)||'null')}catch(e){}
+  let n=freshData();
+  if(old){
+    for(let d=1;d<=5;d++){
+      for(const t of tripsForDay(d)){
+        if(Array.isArray(old.stops?.[d])) n.stops[d][t]=(old.stops[d].concat(DEFAULT)).slice(0,7);
+      }
+    }
+  }
+  return n
+}
+
+function normalize(x){
+  let n=freshData();
+  if(x.records&&typeof x.records==='object')n.records=x.records;
+  for(let d=1;d<=5;d++)for(const t of tripsForDay(d)){
+    let nm=x.names?.[d]?.[t]||x.names?.[d]?.[String(t)];
+    if(Array.isArray(nm)&&nm.length===45)n.names[d][t]=[...nm];
+
+    // 정류소는 새 고정 설정을 사용합니다.
+    n.stops[d][t]=stopDefaults(d);
+
+    let a=x.assign?.[d]?.[t]||x.assign?.[d]?.[String(t)];
+    if(Array.isArray(a)&&a.length===45){
+      // 기존 배정 중 새 정류소와 일치하는 것만 유지합니다.
+      const allowed=n.stops[d][t].map(v=>String(v).trim());
+      n.assign[d][t]=a.map(v=>allowed.includes(String(v).trim())?v:'');
+    }
+  }
+  return n
+}
+let data=loadData();
+
+
+
+
+let currentTrip=1;
+const $=id=>document.getElementById(id); const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function isoToday(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,10)}
+function day(){let n=new Date($('date').value+'T12:00:00').getDay();return (n>=1&&n<=5)?n:1}
+function ensureTrip(){if(day()===3)currentTrip=1}
+function tripKey(){ensureTrip();return $('date').value+'|'+currentTrip}
+function rec(){let k=tripKey();if(!Array.isArray(data.records[k])||data.records[k].length!==45)data.records[k]=Array(45).fill(false);return data.records[k]}
+function curNames(){ensureTrip();return data.names[day()][currentTrip]}
+function curStops(){ensureTrip();return data.stops[day()][currentTrip]}
+function curAssign(){ensureTrip();return data.assign[day()][currentTrip]}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function today(){$('date').value=isoToday();ensureTrip();renderAll()}
+
+async function addToHomeScreen(){
+  if(window.deferredPrompt){
+    window.deferredPrompt.prompt();
+    try{await window.deferredPrompt.userChoice}catch(e){}
+    window.deferredPrompt=null;
+    return;
+  }
+  alert('Chrome 메뉴(⋮) → 「앱 설치」 또는 「홈 화면에 추가」를 선택해 주세요.');
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  window.deferredPrompt=e;
+});
+
+function goHome(){closeStudent();closeSettings();window.scrollTo({top:0,behavior:'smooth'});renderAll();toast('홈 화면으로 이동했습니다.')}
+function selectDay(n){let dt=new Date($('date').value+'T12:00:00');let cur=dt.getDay()||1;dt.setDate(dt.getDate()+(n-cur));$('date').value=dt.toISOString().slice(0,10);if(n===3)currentTrip=1;renderAll()}
+function setTrip(t){if(day()===3)t=1;currentTrip=t;renderAll()}
+function renderWeek(){let n=new Date($('date').value+'T12:00:00').getDay();$('weekday').innerHTML=[1,2,3,4,5].map(d=>`<button class="btn day ${d===n?'active':''}" onclick="selectDay(${d})">${DAY[d]}</button>`).join('');$('dayLabel').textContent=`현재 선택: ${DAY[n]||DAY[1]} · ${$('date').value}`}
+function renderTrips(){ensureTrip();if(day()===3){$('tripbar').innerHTML=`<button class="btn trip active">1차</button><span class="tripnote">수요일은 1차만 운행</span>`}else{$('tripbar').innerHTML=[1,2].map(t=>`<button class="btn trip ${currentTrip===t?'active':''}" onclick="setTrip(${t})">${t}차</button>`).join('')}}
+function stopIndex(stop){let s=String(stop||'').trim();if(!s)return -1;return curStops().findIndex(x=>String(x||'').trim()===s)}
+function colorStyle(idx){if(idx<0)return `background:#eef2f7;border-color:#cbd5e1`;let c=STOP_COLORS[idx%STOP_COLORS.length];return `background:${c.bg};border-color:${c.border}`}
+function renderStops(){let r=rec(),stops=curStops(),assign=curAssign();$('stopGrid').innerHTML=stops.map((s,i)=>{let c=0;for(let j=0;j<45;j++)if(r[j]&&String(assign[j]).trim()===String(s).trim())c++;return `<div class="stopcard" style="${colorStyle(i)}"><span class="snum">정류소 ${i+1}</span><span class="sname">${esc(s||'정류소'+(i+1))}</span><b>${c}명</b></div>`}).join('')}
+function seatHTML(num){const i=num-1,r=rec(),name=curNames()[i]||'',stop=curAssign()[i]||'',idx=stopIndex(stop);return `<div class="seatunit"><button class="seat ${r[i]?'on':''} ${name?'hasname':''}" style="${colorStyle(idx)}" onclick="openStudent(${i})"><span class="check">${r[i]?'✓':''}</span><span class="seatnum">${num}</span><span class="seatname">${name?esc(name):''}</span><span class="seatstop">${stop?esc(stop):''}</span></button><button class="boardquick ${r[i]?'on':''}" onclick="toggleBoarding(${i})">${r[i]?'🟢 탑승 완료':'🔴 탑승'}</button></div>`}
+function renderSeatMap(){let html='';for(let row=0;row<=10;row++){let base=row*4+1;html+=`<div class="seatrow">${seatHTML(base)}${seatHTML(base+1)}<div class="aisle">통로</div>${seatHTML(base+2)}${seatHTML(base+3)}</div>`}html+='<div class="back45"><div class="seat45">'+seatHTML(45)+'</div></div>';$('seatMap').innerHTML=html}
+function toggleBoarding(i){let r=rec();r[i]=!r[i];save();renderAll();toast(`${currentTrip}차 · ${i+1}번 ${r[i]?'탑승 완료':'미탑승'}`)}
+function renderCounts(){let on=rec().filter(Boolean).length;$('onCount').textContent=on+'명';$('offCount').textContent=(45-on)+'명'}
+function renderAll(){ensureTrip();renderWeek();renderTrips();renderStops();renderSeatMap();renderCounts()}
+let editing=-1,editingBoard=false;
+function openStudent(i){editing=i;let r=rec();editingBoard=!!r[i];$('studentTitle').textContent=`${DAY[day()]} ${currentTrip}차 · ${i+1}번 좌석`; $('studentName').value=curNames()[i]||'';let current=curAssign()[i]||'';$('studentStop').innerHTML=`<option value="">정류소 선택</option>`+curStops().map(s=>`<option value="${esc(s)}" ${String(s).trim()===String(current).trim()?'selected':''}>${esc(s)}</option>`).join('');paintStudentStop();paintBoardBtn();$('studentModal').style.display='flex'}
+function saveNameOnly(){if(editing<0)return;curNames()[editing]=$('studentName').value.trim();save();renderSeatMap()}
+function paintStudentStop(){let el=$('studentStop');let idx=stopIndex(el.value);if(idx<0){el.style.background='#fff';el.style.borderColor='#d1d5db';el.style.color='#000';el.style.webkitTextFillColor='#000';return}let c=STOP_COLORS[idx%STOP_COLORS.length];el.style.background=c.bg;el.style.borderColor=c.border;el.style.color='#000';el.style.webkitTextFillColor='#000'}
+function paintBoardBtn(){let b=$('boardBtn');b.textContent=editingBoard?'🟢 탑승 완료':'🔴 미탑승';b.className='btn '+(editingBoard?'green':'light')}
+function toggleEditingBoard(){editingBoard=!editingBoard;paintBoardBtn()}
+function saveStudent(){if(editing<0)return;let seatNo=editing+1;curNames()[editing]=String($('studentName').value||'').trim();curAssign()[editing]=$('studentStop').value.trim();rec()[editing]=editingBoard;save();closeStudent();renderAll();toast(`${currentTrip}차 · ${seatNo}번 좌석 저장 완료`)}
+function closeStudent(){$('studentModal').style.display='none';editing=-1}
+function saveCurrent(){save();toast(`${currentTrip}차 저장되었습니다. 😊`)}
+function resetBoarding(){if(!confirm(`${DAY[day()]} ${currentTrip}차 탑승 체크를 모두 해제할까요?`))return;data.records[tripKey()]=Array(45).fill(false);save();renderAll();toast(`${currentTrip}차 탑승 체크를 초기화했습니다.`)}
+function clearCurrentTripNames(){
+  ensureTrip();
+  const label=`${DAY[day()]} ${currentTrip}차`;
+  if(!confirm(`${label} 1번부터 45번까지 학생 이름을 전부 지울까요?\n정류소와 탑승 상태는 그대로 유지됩니다.`))return;
+  data.names[day()][currentTrip]=blank45();
+  save();
+  renderAll();
+  toast(`${label} 이름 1~45번을 모두 지웠습니다.`);
+}
+function resetDayRoster(){
+  const d=day();
+  const label=DAY[d];
+  const trips=tripsForDay(d);
+  const msg=d===3
+    ? `${label} 명단과 정류소 배정을 모두 지울까요?\n(수요일 1차 명단만 삭제됩니다.)`
+    : `${label} 1차·2차 명단과 정류소 배정을 모두 지울까요?`;
+  if(!confirm(msg))return;
+  for(const t of trips){
+    data.names[d][t]=blank45();
+    data.assign[d][t]=blank45();
+  }
+  // 선택한 날짜의 해당 차수 탑승 체크도 함께 초기화
+  for(const t of trips){
+    const k=$('date').value+'|'+t;
+    data.records[k]=Array(45).fill(false);
+  }
+  save();
+  if(d===3) currentTrip=1;
+  renderAll();
+  toast(`${label} 명단을 지웠습니다. 새 명단을 입력해 저장하세요.`);
+}
+function openSettings(){let h='';for(let d=1;d<=5;d++){h+=`<div class="settingday"><h3>${DAY[d]}</h3>`;for(const t of tripsForDay(d)){h+=`<div class="settingtrip"><b>${t}차 정류소</b><div class="stopinputs">${data.stops[d][t].map((s,i)=>`<input id="set-${d}-${t}-${i}" value="${esc(s)}" placeholder="정류소${i+1}" style="${colorStyleForSetting(i)}">`).join('')}</div></div>`}h+='</div>'}$('settingsDays').innerHTML=h;$('settingsModal').style.display='flex'}
+function colorStyleForSetting(i){let c=STOP_COLORS[i%STOP_COLORS.length];return `background:${c.bg};border:2px solid ${c.border};color:#000;-webkit-text-fill-color:#000`}
+function closeSettings(){$('settingsModal').style.display='none'}
+function saveSettings(){
+  for(let d=1;d<=5;d++)for(const t of tripsForDay(d)){
+    const count=stopDefaults(d).length;
+    for(let i=0;i<count;i++)data.stops[d][t][i]=$(`set-${d}-${t}-${i}`).value.trim()||stopDefaults(d)[i];
+    data.stops[d][t]=data.stops[d][t].slice(0,count);
+  }
+  save();closeSettings();renderAll();toast('요일·차수별 정류소가 저장되었습니다.')
+}
+function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>{$('toast').style.display='none'},1700)}
+$('date').value=isoToday();$('date').addEventListener('change',()=>{ensureTrip();renderAll()});$('studentModal').addEventListener('click',e=>{if(e.target===$('studentModal'))closeStudent()});$('settingsModal').addEventListener('click',e=>{if(e.target===$('settingsModal'))closeSettings()});renderAll();
+if('serviceWorker' in navigator && location.protocol !== 'file:'){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body></html>
